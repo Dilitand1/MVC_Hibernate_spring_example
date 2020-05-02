@@ -1,5 +1,8 @@
 package model.dao;
+import model.entities.Account;
 import model.entities.Person;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,8 +21,17 @@ public class DaoImpl implements Dao {
     }
 
     @Override
-    public void getClient(int id) {
+    public Person getClientById(int id) {
+        Session session = sessionFactory.openSession();
+        Person person = (Person) session.get(Person.class,id);
+        return person;
+    }
 
+    @Override
+    public List<Person> getClientsByName(String name) {
+        Session session = sessionFactory.openSession();
+        List list = session.createQuery("Select p FROM Person p where name = :name").setParameter("name",name).list();
+        return list;
     }
 
     @Override
@@ -40,6 +52,21 @@ public class DaoImpl implements Dao {
 
     @Override
     public void changeClient() {
+
+    }
+
+    @Override
+    public void deposit(Object o) {
+
+    }
+
+    @Override
+    public void withdraw(Object o) {
+
+    }
+
+    @Override
+    public void moneyTransfer(Object o1, Object o2) {
 
     }
 

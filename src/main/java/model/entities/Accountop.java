@@ -1,5 +1,6 @@
 package model.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ public class Accountop {
     private int id;
 
     @Column(name = "OPDAY")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     private Date opdate;
 
     @Column(name = "OPCASH")
@@ -27,6 +29,9 @@ public class Accountop {
     public Accountop(Date opdate, double opcash) {
         this.opdate = opdate;
         this.opcash = opcash;
+    }
+
+    public Accountop() {
     }
 
     public int getId() {

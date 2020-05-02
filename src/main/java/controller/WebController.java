@@ -2,10 +2,12 @@ package controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.entities.Person;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +30,18 @@ public class WebController {
     @RequestMapping(value = "/getAllClients", method = RequestMethod.GET)
     public @ResponseBody List getAllClients(){
         return webService.getAllClients();
+    }
+
+    @RequestMapping(value = "/getclient/{id}", method = RequestMethod.GET)
+    public @ResponseBody
+    Person getAllClientById(@PathVariable int id){
+        return webService.getClientById(id);
+    }
+
+    @RequestMapping(value = "/getclients/{name}", method = RequestMethod.GET)
+    public @ResponseBody
+    List getAllClientsByName(@PathVariable String name){
+        return webService.getClientsByName(name);
     }
 
     @RequestMapping(value = "/getAllClientsSimulate", method = RequestMethod.GET)

@@ -60,6 +60,14 @@ public class Account {
         accountopList.add(accountop);
     }
 
+    public List<Accountop> getAccountopList() {
+        return accountopList;
+    }
+
+    public void setAccountopList(List<Accountop> accountopList) {
+        this.accountopList = accountopList;
+    }
+
     @Override
     public String toString() {
         return "Account{" +
