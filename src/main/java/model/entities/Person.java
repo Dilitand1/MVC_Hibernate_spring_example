@@ -1,5 +1,8 @@
 package model.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +18,7 @@ public class Person {
     @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accountList = new ArrayList<>();
 
     public Person(String name) {

@@ -18,6 +18,9 @@ public class Accountop {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm a z")
     private Date opdate;
 
+    @Column(name = "DEBET")
+    private String debet;
+
     @Column(name = "OPCASH")
     private double opcash;
 
@@ -56,6 +59,14 @@ public class Accountop {
 
     public void setOpcash(double opcash) {
         this.opcash = opcash;
+    }
+
+    public String getDebet() {
+        return debet;
+    }
+
+    public void setDebet(String debet) {
+        this.debet = debet;
     }
 
     public Account getAccount() {

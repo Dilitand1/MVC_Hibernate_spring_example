@@ -1,16 +1,21 @@
 package model.dao;
 import model.entities.Account;
+import model.entities.Accountop;
 import model.entities.Person;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
+@Transactional
 public class DaoImpl implements Dao {
 
     private SessionFactory sessionFactory;
@@ -21,33 +26,56 @@ public class DaoImpl implements Dao {
     }
 
     @Override
-    public Person getClientById(int id) {
-        Session session = sessionFactory.openSession();
-        Person person = (Person) session.get(Person.class,id);
-        return person;
-    }
-
-    @Override
     public List<Person> getClientsByName(String name) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         List list = session.createQuery("Select p FROM Person p where name = :name").setParameter("name",name).list();
         return list;
     }
 
     @Override
     public List getAllClients() {
-        List list = sessionFactory.openSession().createQuery("FROM Person").list();
+        List list = sessionFactory.getCurrentSession().createQuery("FROM Person").list();
         return list;
     }
 
     @Override
-    public void addClient(Object o) {
-
+    @Transactional
+    public Person getClientById(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        Person person = (Person) session.get(Person.class,id);
+        return person;
     }
 
     @Override
-    public void dropClient(int id) {
+    @Transactional(readOnly = true)
+    public Account getAccountByNum(String account) {
+        Session session = sessionFactory.getCurrentSession();
+        //Вариант без костылей
+        Account acc = (Account) session.bySimpleNaturalId(Account.class).load(account);
+        //Вариант с костылями
+        //List<Account> querry = session.createQuery("Select a FROM Account a where acc = :acc").setParameter("acc",account).list();
+        //Integer id = querry.get(0).getId();
+        //Account acc = (Account) session.get(Account.class,id);
+        return acc;
+    }
 
+    @Override
+    public List getAllOperations(String acc) {
+        return sessionFactory.getCurrentSession()
+        .createQuery("FROM Accountop where account_id = :acc")
+                .setParameter("acc",getAccountByNum(acc).getId()).list();
+    }
+
+    @Override
+    @Transactional
+    public void addClient(Person o) {
+        sessionFactory.getCurrentSession().save(o);
+    }
+
+    @Override
+    @Transactional
+    public void dropClient(Person p) {
+        sessionFactory.getCurrentSession().delete(p);
     }
 
     @Override
@@ -55,19 +83,50 @@ public class DaoImpl implements Dao {
 
     }
 
+
     @Override
-    public void deposit(Object o) {
+    @Transactional
+    public void deposit(Account a, double sum, String from) {
+        sum = Math.abs(sum);
+        Session session = sessionFactory.getCurrentSession();
+
+        //Если объявлена аннотация transactional то это не нужно:
+        //Transaction transaction = session.beginTransaction();
+        //transaction.commit();
+
+        Accountop accountop = new Accountop(new Date(),sum);
+        accountop.setDebet(from);
+        Account account = (Account) session.load(Account.class,a.getId());
+        account.addAccountOp(accountop);
+        session.saveOrUpdate(account);
+    }
+
+    @Override
+    @Transactional
+    public void withdraw(Account a, double sum, String to) throws Exception {
+        sum = sum > 0 ? sum*(-1) : sum;
+        if (a.getBalance() < Math.abs(sum)) throw new Exception("Недостаточно средств");
+        Session session = sessionFactory.getCurrentSession();
+        Accountop accountop = new Accountop(new Date(),sum);
+        accountop.setDebet(to);
+        Account account = (Account) session.load(Account.class,a.getId());
+        account.addAccountOp(accountop);
+        session.saveOrUpdate(account);
+    }
+
+    @Override
+    @Transactional
+    public void moneyTransfer(Account from, Account to, double sum) {
 
     }
 
     @Override
-    public void withdraw(Object o) {
-
-    }
-
-    @Override
-    public void moneyTransfer(Object o1, Object o2) {
-
+    @Transactional
+    public void moneyTransfer(String from, String to, double sum) throws Exception {
+        Account accFrom = getAccountByNum(from);
+        Account accTo = getAccountByNum(to);
+        withdraw(accFrom,sum,accTo.getAcc());
+        deposit(accTo,sum, accFrom.getAcc());
     }
 
     @Override
@@ -86,5 +145,9 @@ public class DaoImpl implements Dao {
         list.add(p2);
 
         return list;
+    }
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
     }
 }

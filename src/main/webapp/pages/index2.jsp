@@ -10,10 +10,11 @@
 
         <section class="commands">
             <h2>Доступные команды</h2>
-            <ul class="skills-list">
+            <ul class="commands-list">
                 <li>/getAllClients - получить всех клиентов</li>
                 <li>/getclients/{name} - клиент по имени</li>
                 <li>/getclient/{id} - клиент по id</li>
+                <li>/account/{accountNumber} - все операции по счету</li>
                 <li>..</li>
             </ul>
         </section>

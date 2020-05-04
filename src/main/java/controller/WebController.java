@@ -44,6 +44,15 @@ public class WebController {
         return webService.getClientsByName(name);
     }
 
+    @RequestMapping(path = "/account/{accountNumber}")
+    public @ResponseBody List getAllOperations(@PathVariable String accountNumber){
+        return webService.getAllOperations(accountNumber);
+    }
+
+    public void deposit(){};
+    public void withdraw(){};
+    public void transfer(){};
+
     @RequestMapping(value = "/getAllClientsSimulate", method = RequestMethod.GET)
     public @ResponseBody
     List getAllClientsSimulation(){
