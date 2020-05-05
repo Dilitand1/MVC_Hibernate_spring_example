@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import service.WebService;
 
 import java.util.List;
@@ -49,9 +46,23 @@ public class WebController {
         return webService.getAllOperations(accountNumber);
     }
 
-    public void deposit(){};
-    public void withdraw(){};
-    public void transfer(){};
+    //http://localhost:8080/JavaRebootMVC20200430_MVC_war_exploded/deposit?account=40702810001&summa=111
+    @RequestMapping(path = "/deposit")
+    public @ResponseBody String deposit(@RequestParam("account") String account , @RequestParam("sum") double summa){
+        webService.deposit(account,summa,"Наличные");
+        return "ok";
+    };
+
+    @RequestMapping(path = "/withdraw")
+    public @ResponseBody String withdraw(@RequestParam("account") String account , @RequestParam("sum") double summa) throws Exception {
+        webService.withdraw(account,summa,"Наличные");
+        return "ok";
+    };
+    @RequestMapping(path = "/transfer")
+    public @ResponseBody String transfer(@RequestParam("accountFrom") String from,@RequestParam("accountTo") String to, @RequestParam("sum") double sum) throws Exception {
+        webService.moneyTransfer(from,to,sum);
+        return "ok";
+    };
 
     @RequestMapping(value = "/getAllClientsSimulate", method = RequestMethod.GET)
     public @ResponseBody

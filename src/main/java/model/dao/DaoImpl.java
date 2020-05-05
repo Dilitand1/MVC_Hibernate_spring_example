@@ -62,8 +62,8 @@ public class DaoImpl implements Dao {
     @Override
     public List getAllOperations(String acc) {
         return sessionFactory.getCurrentSession()
-        .createQuery("FROM Accountop where account_id = :acc")
-                .setParameter("acc",getAccountByNum(acc).getId()).list();
+        .createQuery("select  op FROM Account a join Accountop op on a.id = op.account where a.acc = :acc")
+                .setParameter("acc",acc).list();
     }
 
     @Override
