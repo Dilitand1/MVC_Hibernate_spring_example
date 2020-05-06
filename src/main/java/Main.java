@@ -12,6 +12,7 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        //тесты, удалить...
         //AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(ConfigClass.class);
         //Dao dao = context.getBean("daoImpl", Dao.class);
         //WebService webService = context.getBean(WebService.class);
