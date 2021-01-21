@@ -20,7 +20,7 @@
         <spring.version>4.2.3.RELEASE</spring.version>
         <hibernate.version_new>5.4.10.Final</hibernate.version_new>
         <hibernate.version_old>4.2.3.RELEASE</hibernate.version_old>
-        <jackson.version>2.9.4</jackson.version>
+        <jackson.version>2.12.1</jackson.version>
     </properties>
 
     <dependencies>
